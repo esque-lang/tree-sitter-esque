@@ -1,0 +1,110 @@
+==================
+Simple function
+==================
+
+fn main() -> i32 = 42
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (integer_literal)))
+
+==================
+Function with parameters
+==================
+
+fn add(a: i32, b: i32) -> i32 = a + b
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter name: (identifier) type: (primitive_type))
+      (parameter name: (identifier) type: (primitive_type)))
+    return_type: (primitive_type)
+    body: (binary_expression
+      left: (identifier)
+      right: (identifier))))
+
+==================
+Function with block body
+==================
+
+fn sum(a: i32, b: i32) -> i32 = {
+    let x = a + b;
+    x
+}
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter name: (identifier) type: (primitive_type))
+      (parameter name: (identifier) type: (primitive_type)))
+    return_type: (primitive_type)
+    body: (block
+      (let_statement
+        name: (identifier)
+        value: (binary_expression
+          left: (identifier)
+          right: (identifier)))
+      result: (identifier))))
+
+==================
+Function with shape parameters
+==================
+
+fn dot[N: nat](x: f32[N], y: f32[N]) -> f32 = +/(x .* y)
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    shape_parameters: (shape_parameters
+      (shape_parameter name: (identifier)))
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (tensor_type
+          element: (primitive_type)
+          shape: (shape_variable (identifier))))
+      (parameter
+        name: (identifier)
+        type: (tensor_type
+          element: (primitive_type)
+          shape: (shape_variable (identifier)))))
+    return_type: (primitive_type)
+    body: (reduce_expression
+      operand: (parenthesized_expression
+        (binary_expression
+          left: (identifier)
+          right: (identifier))))))
+
+==================
+Function with attribute
+==================
+
+@io fn main() -> i32 = print_i32(42)
+
+---
+
+(source_file
+  (function_declaration
+    (attribute
+      name: (attribute_name))
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (call_expression
+      function: (identifier)
+      arguments: (argument_list
+        (integer_literal)))))

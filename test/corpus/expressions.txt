@@ -1,0 +1,160 @@
+==================
+If-else expression
+==================
+
+fn abs(x: i32) -> i32 = if x < 0 { -x } else { x }
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter name: (identifier) type: (primitive_type)))
+    return_type: (primitive_type)
+    body: (if_expression
+      condition: (binary_expression
+        left: (identifier)
+        right: (integer_literal))
+      then: (block
+        result: (unary_expression
+          operand: (identifier)))
+      else: (block
+        result: (identifier)))))
+
+==================
+Match expression
+==================
+
+fn classify(n: i32) -> i32 = match n {
+    0 => 10,
+    1 => 20,
+    _ => 99
+}
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter name: (identifier) type: (primitive_type)))
+    return_type: (primitive_type)
+    body: (match_expression
+      scrutinee: (identifier)
+      (match_arm
+        pattern: (literal_pattern (integer_literal))
+        body: (integer_literal))
+      (match_arm
+        pattern: (literal_pattern (integer_literal))
+        body: (integer_literal))
+      (match_arm
+        pattern: (wildcard_pattern)
+        body: (integer_literal)))))
+
+==================
+Pipeline
+==================
+
+fn main() -> i32 = 3 |> double |> add_one
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (binary_expression
+      left: (binary_expression
+        left: (integer_literal)
+        right: (identifier))
+      right: (identifier))))
+
+==================
+Tensor literal
+==================
+
+fn main() -> i32 = {
+    let xs = [1.0, 2.0, 3.0];
+    0
+}
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (block
+      (let_statement
+        name: (identifier)
+        value: (tensor_literal
+          (float_literal)
+          (float_literal)
+          (float_literal)))
+      result: (integer_literal))))
+
+==================
+Lambda
+==================
+
+fn main() -> i32 = {
+    let f = |x| x + 1;
+    0
+}
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (block
+      (let_statement
+        name: (identifier)
+        value: (lambda_expression
+          (lambda_parameter name: (identifier))
+          body: (binary_expression
+            left: (identifier)
+            right: (integer_literal))))
+      result: (integer_literal))))
+
+==================
+Let-in expression
+==================
+
+fn main() -> i32 = {
+    let r = iterate(1, 0, |a|
+        let b = a + 1 in
+        b
+    );
+    r
+}
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (block
+      (let_statement
+        name: (identifier)
+        value: (call_expression
+          function: (identifier)
+          arguments: (argument_list
+            (integer_literal)
+            (integer_literal)
+            (lambda_expression
+              (lambda_parameter name: (identifier))
+              body: (let_in_expression
+                name: (identifier)
+                value: (binary_expression
+                  left: (identifier)
+                  right: (integer_literal))
+                body: (identifier))))))
+      result: (identifier))))
