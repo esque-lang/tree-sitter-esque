@@ -123,6 +123,28 @@ fn main() -> i32 = {
       result: (integer_literal))))
 
 ==================
+Reserved keyword: mut
+==================
+
+fn main() -> i32 = {
+    let x = mut;
+    0
+}
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (block
+      (let_statement
+        name: (identifier)
+        value: (reserved_keyword))
+      result: (integer_literal))))
+
+==================
 Let-in expression
 ==================
 

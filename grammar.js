@@ -205,7 +205,15 @@ module.exports = grammar({
       $.cast_expression,
       $.range_expression,
       $.call_expression,
+      $.reserved_keyword,
     ),
+
+    // Lexically-reserved keywords that have no syntactic role yet.
+    // Matches the v0.13 compiler's reservation set: `mut` is reserved
+    // for the future linear-types / mutability work (see esquec
+    // `reference/planned/linear-types.md`). Listing the token here
+    // teaches the word lexer to never emit it as an identifier.
+    reserved_keyword: _ => 'mut',
 
     parenthesized_expression: $ => seq('(', $._expression, ')'),
 

@@ -22,6 +22,11 @@
   "in"
 ] @keyword
 
+; `mut` is lexically reserved (see `reserved_keyword` in grammar.js)
+; but has no syntactic role yet — colour it as a keyword anyway so
+; editors are consistent with the v0.13 compiler's lexer.
+(reserved_keyword) @keyword
+
 [
   "if"
   "else"
