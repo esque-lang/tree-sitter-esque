@@ -133,6 +133,35 @@ make install                # copies queries to $HOME/.config/tree-sitter
 make install PREFIX=...     # override target dir
 ```
 
+## Distribution
+
+Releases ship as **GitHub Releases only** — each `v*` tag fires
+`.github/workflows/release.yml`, which regenerates `src/parser.c`,
+runs the corpus tests, and attaches a `tree-sitter-esque-<tag>-source.tar.gz`
+(plus a SHA-256 sidecar) to the tag's release page.
+
+Multi-ecosystem publishing (`crates.io`, PyPI, npm) is intentionally
+deferred — see
+[#3](https://github.com/esque-lang/tree-sitter-esque/issues/3) for the
+rationale. The `Cargo.toml`, `pyproject.toml`, `package.json`, and
+`Package.swift` manifests are present so downstream consumers can pull
+the grammar straight from git in their language of choice:
+
+```bash
+# Rust
+cargo add tree-sitter-esque --git https://github.com/esque-lang/tree-sitter-esque
+
+# Python
+pip install git+https://github.com/esque-lang/tree-sitter-esque
+
+# Node
+npm install github:esque-lang/tree-sitter-esque
+```
+
+The git tag is the source of truth for "what version am I on?"; the
+`version` field in each manifest is a placeholder, not policed against
+the tag, because nothing reads it without a registry publish step.
+
 ## Highlight captures
 
 `queries/highlights.scm` uses the standard tree-sitter capture names

@@ -1,7 +1,9 @@
 [package]
 name = "tree-sitter-esque"
 description = "Esque grammar for tree-sitter"
-version = "0.14.0"
+# Not policed against the git tag — see README "Distribution" and
+# https://github.com/esque-lang/tree-sitter-esque/issues/3.
+version = "0.0.0"
 license = "MIT"
 readme = "README.md"
 keywords = ["incremental", "parsing", "tree-sitter", "esque"]
