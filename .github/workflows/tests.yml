@@ -24,20 +24,29 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
-      - run: npm ci
+      # Install tree-sitter-cli globally rather than via the project's
+      # `npm ci`. The package.json `install` hook is `node-gyp-build`,
+      # which tries to compile the native binding against `src/parser.c`
+      # — and that file is gitignored, so `npm ci` fails before we ever
+      # reach `tree-sitter generate`. Running `npm ci --ignore-scripts`
+      # avoids the binding compile but also skips the postinstall that
+      # downloads the tree-sitter binary itself. Global install
+      # sidesteps both problems; CI doesn't need the project's
+      # node_modules for corpus tests.
+      - name: Install tree-sitter-cli
+        run: npm install -g tree-sitter-cli
 
       - name: Generate parser
-        run: npx tree-sitter generate
+        run: tree-sitter generate
 
       - name: Run corpus tests
-        run: npx tree-sitter test
+        run: tree-sitter test
 
       - name: Smoke-parse example fixtures
         run: |
           for f in examples/*.esq; do
             echo "::group::parse $f"
-            npx tree-sitter parse "$f" >/dev/null
+            tree-sitter parse "$f" >/dev/null
             echo "::endgroup::"
           done
