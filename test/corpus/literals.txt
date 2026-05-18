@@ -1,0 +1,59 @@
+==================
+String literal with escape
+==================
+
+fn main() -> i32 = {
+    let s = "hello\n";
+    0
+}
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (block
+      (let_statement
+        name: (identifier)
+        value: (string_literal))
+      result: (integer_literal))))
+
+==================
+Char literal escapes
+==================
+
+fn main() -> i32 = {
+    let a = 'A';
+    let b = '\n';
+    let c = '\0';
+    let d = '\xFF';
+    let e = '\u{2603}';
+    0
+}
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (block
+      (let_statement
+        name: (identifier)
+        value: (char_literal))
+      (let_statement
+        name: (identifier)
+        value: (char_literal))
+      (let_statement
+        name: (identifier)
+        value: (char_literal))
+      (let_statement
+        name: (identifier)
+        value: (char_literal))
+      (let_statement
+        name: (identifier)
+        value: (char_literal))
+      result: (integer_literal))))

@@ -4,10 +4,12 @@
 the [esque](https://github.com/esque-lang/esquec) programming
 language — a statically typed, tensor-primitive systems language.
 
-The grammar tracks the v0.13 surface syntax: `@io` / `@kernel`
+The grammar tracks the v0.14 surface syntax: `@io` / `@kernel`
 attributes, the flexible `each` callee, scalar `f64`/`i8`/`u8`,
-string literals, and the v0.11 large-N loop primitives (`tabulate`,
-`scan`, `iterate`, `iterate_until`, `each`).
+string literals, the v0.11 large-N loop primitives (`tabulate`,
+`scan`, `iterate`, `iterate_until`, `each`), the four reduction
+operators (`+/`, `-/`, `*/`, `//`), and `#` as the line-comment
+lead-in.
 
 ## What's included
 
@@ -87,7 +89,7 @@ scope = "source.esque"
 file-types = ["esq"]
 roots = ["go.mod", ".git"]
 indent = { tab-width = 4, unit = "    " }
-comment-token = "//"
+comment-token = "#"
 
 [[grammar]]
 name = "esque"
@@ -150,7 +152,7 @@ so it works out of the box with both Helix and nvim-treesitter:
 | `@string`, `@constant.character` | string and char literals              |
 | `@operator`                      | all infix/prefix operators            |
 | `@attribute`                     | `@io`, `@kernel`, `@grad`, …          |
-| `@comment.line`, `@comment.block`| `//` and `/* */`                      |
+| `@comment.line`, `@comment.block`| `#` and `/* */`                       |
 
 ## Grammar conformance
 
@@ -167,9 +169,11 @@ A handful of points worth flagging:
    regexes can't match nested constructs in pure rules; the grammar
    accepts the *outermost* form. The official lexer (and this
    project's LSP server) enforces full nesting.
-2. **`//` reduction** vs. the lexer-special line-comment overlap is
-   resolved by the lexer in `esquec`. Tree-sitter handles it the
-   same way: `//` always wins as a comment when it begins a token.
+2. **`//` is unambiguously the divide-reduction operator** in
+   v0.14. The earlier overlap with `//` line comments was resolved
+   in `esquec` by moving the line-comment lead-in to `#`, so there
+   is no lexer tie-break to model here — `//` always reduces, `#`
+   always comments.
 3. **Shape arithmetic precedence** is independent of value-space
    precedence. The grammar models it with two precedence levels
    (`+`/`-` < `*`/`/`).

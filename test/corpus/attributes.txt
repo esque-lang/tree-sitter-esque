@@ -1,0 +1,90 @@
+==================
+Bare @io attribute
+==================
+
+@io fn show(p: f32) -> f32 = print_f32(p)
+
+---
+
+(source_file
+  (function_declaration
+    (attribute
+      name: (attribute_name))
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter name: (identifier) type: (primitive_type)))
+    return_type: (primitive_type)
+    body: (call_expression
+      function: (identifier)
+      arguments: (argument_list
+        (identifier)))))
+
+==================
+Single-token @kernel attribute
+==================
+
+@kernel fn k[N: nat](x: f32[N]) -> f32[N] = x
+
+---
+
+(source_file
+  (function_declaration
+    (attribute
+      name: (attribute_name))
+    name: (identifier)
+    shape_parameters: (shape_parameters
+      (shape_parameter name: (identifier)))
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (tensor_type
+          element: (primitive_type)
+          shape: (shape_variable (identifier)))))
+    return_type: (tensor_type
+      element: (primitive_type)
+      shape: (shape_variable (identifier)))
+    body: (identifier)))
+
+==================
+Multiple attributes
+==================
+
+@io @grad fn loss[N: nat](xs: f32[N]) -> f32 = +/xs
+
+---
+
+(source_file
+  (function_declaration
+    (attribute name: (attribute_name))
+    (attribute name: (attribute_name))
+    name: (identifier)
+    shape_parameters: (shape_parameters
+      (shape_parameter name: (identifier)))
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (tensor_type
+          element: (primitive_type)
+          shape: (shape_variable (identifier)))))
+    return_type: (primitive_type)
+    body: (reduce_expression
+      operand: (identifier))))
+
+==================
+Attribute with arguments
+==================
+
+@grad(rate) fn g(x: f32) -> f32 = x
+
+---
+
+(source_file
+  (function_declaration
+    (attribute
+      name: (attribute_name)
+      (identifier))
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter name: (identifier) type: (primitive_type)))
+    return_type: (primitive_type)
+    body: (identifier)))

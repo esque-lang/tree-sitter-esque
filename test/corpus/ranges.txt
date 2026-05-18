@@ -1,0 +1,58 @@
+==================
+Exclusive range reduction
+==================
+
+fn s() -> i32 = +/(0..5)
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (reduce_expression
+      operand: (parenthesized_expression
+        (range_expression
+          start: (integer_literal)
+          end: (integer_literal))))))
+
+==================
+Inclusive range reduction
+==================
+
+fn t() -> i32 = +/(1..=5)
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (reduce_expression
+      operand: (parenthesized_expression
+        (range_expression
+          start: (integer_literal)
+          end: (integer_literal))))))
+
+==================
+Range piped to identifier
+==================
+
+fn u(n: i32) -> i32 = (0..n) |> sum
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter name: (identifier) type: (primitive_type)))
+    return_type: (primitive_type)
+    body: (binary_expression
+      left: (parenthesized_expression
+        (range_expression
+          start: (integer_literal)
+          end: (identifier)))
+      right: (identifier))))

@@ -1,0 +1,28 @@
+==================
+Match arm with guard
+==================
+
+fn pos(n: i32) -> i32 = match n {
+    n if n > 0 => n,
+    _ => 0
+}
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter name: (identifier) type: (primitive_type)))
+    return_type: (primitive_type)
+    body: (match_expression
+      scrutinee: (identifier)
+      (match_arm
+        pattern: (bind_pattern (identifier))
+        guard: (binary_expression
+          left: (identifier)
+          right: (integer_literal))
+        body: (identifier))
+      (match_arm
+        pattern: (wildcard_pattern)
+        body: (integer_literal)))))

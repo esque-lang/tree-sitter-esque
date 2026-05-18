@@ -1,0 +1,77 @@
+==================
+Shape arithmetic in tensor type
+==================
+
+fn ka[M: nat, N: nat](x: f32[M + 1, N * 2]) -> f32 = 0.0
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    shape_parameters: (shape_parameters
+      (shape_parameter name: (identifier))
+      (shape_parameter name: (identifier)))
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (tensor_type
+          element: (primitive_type)
+          shape: (shape_binary_expression
+            (shape_variable (identifier))
+            (shape_literal (integer_literal)))
+          shape: (shape_binary_expression
+            (shape_variable (identifier))
+            (shape_literal (integer_literal))))))
+    return_type: (primitive_type)
+    body: (float_literal)))
+
+==================
+Mixed literal and variable shape
+==================
+
+fn kb[N: nat](x: f32[3, N]) -> f32 = 0.0
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    shape_parameters: (shape_parameters
+      (shape_parameter name: (identifier)))
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (tensor_type
+          element: (primitive_type)
+          shape: (shape_literal (integer_literal))
+          shape: (shape_variable (identifier)))))
+    return_type: (primitive_type)
+    body: (float_literal)))
+
+==================
+Parenthesised shape expression
+==================
+
+fn kc[M: nat](x: f32[(M + 1) * 2]) -> f32 = 0.0
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    shape_parameters: (shape_parameters
+      (shape_parameter name: (identifier)))
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (tensor_type
+          element: (primitive_type)
+          shape: (shape_binary_expression
+            (shape_paren
+              (shape_binary_expression
+                (shape_variable (identifier))
+                (shape_literal (integer_literal))))
+            (shape_literal (integer_literal))))))
+    return_type: (primitive_type)
+    body: (float_literal)))
