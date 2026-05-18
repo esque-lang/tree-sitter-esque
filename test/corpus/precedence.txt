@@ -1,0 +1,56 @@
+==================
+Cast binds tighter than range
+==================
+
+fn main() -> i32 = {
+    let r = (0..5) as f32[5];
+    0
+}
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (block
+      (let_statement
+        name: (identifier)
+        value: (cast_expression
+          value: (parenthesized_expression
+            (range_expression
+              start: (integer_literal)
+              end: (integer_literal)))
+          type: (tensor_type
+            element: (primitive_type)
+            shape: (shape_literal (integer_literal)))))
+      result: (integer_literal))))
+
+==================
+Pipeline RHS accepts unparenthesised reduce
+==================
+
+fn main(xs: i32[4], ys: i32[4]) -> i32 = xs |> +/ys
+
+---
+
+(source_file
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (tensor_type
+          element: (primitive_type)
+          shape: (shape_literal (integer_literal))))
+      (parameter
+        name: (identifier)
+        type: (tensor_type
+          element: (primitive_type)
+          shape: (shape_literal (integer_literal)))))
+    return_type: (primitive_type)
+    body: (binary_expression
+      left: (identifier)
+      right: (reduce_expression
+        operand: (identifier)))))

@@ -1,0 +1,48 @@
+==================
+Header line comment
+==================
+
+# license
+fn main() -> i32 = 0
+
+---
+
+(source_file
+  (line_comment)
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (integer_literal)))
+
+==================
+Block comment with internal slashes
+==================
+
+/* a // b */ fn main() -> i32 = 0
+
+---
+
+(source_file
+  (block_comment)
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (integer_literal)))
+
+==================
+Block comment with internal star-slash boundary
+==================
+
+/* / * */ fn main() -> i32 = 0
+
+---
+
+(source_file
+  (block_comment)
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (primitive_type)
+    body: (integer_literal)))
