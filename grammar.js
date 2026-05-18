@@ -54,7 +54,9 @@ module.exports = grammar({
     // ----------------------------------------------------------------
     // Comments
     // ----------------------------------------------------------------
-    line_comment: _ => token(seq('//', /.*/)),
+    // Line comments use `#` as of v0.14 — `//` is the divide-reduction
+    // operator (see `reduce_expression`).
+    line_comment: _ => token(seq('#', /.*/)),
 
     // Block comments are nestable in esque. Tree-sitter's regex engine
     // can't match nested constructs, so we approximate with a non-greedy
@@ -328,7 +330,7 @@ module.exports = grammar({
     )),
 
     reduce_expression: $ => prec(PREC.unary, seq(
-      field('operator', choice('+/', '*/', '-/')),
+      field('operator', choice('+/', '-/', '*/', '//')),
       field('operand', $._expression),
     )),
 

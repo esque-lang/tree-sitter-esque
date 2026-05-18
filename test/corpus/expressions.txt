@@ -180,3 +180,50 @@ fn main() -> i32 = {
                   right: (integer_literal))
                 body: (identifier))))))
       result: (identifier))))
+
+==================
+Reductions: +/, -/, */, //
+==================
+
+# v0.14 reductions
+fn r4(xs: i32[4]) -> i32 = {
+    let a = +/xs;
+    let b = -/xs;
+    let c = */xs;
+    let d = //xs;
+    a + b + c + d
+}
+
+---
+
+(source_file
+  (line_comment)
+  (function_declaration
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (tensor_type
+          element: (primitive_type)
+          shape: (shape_literal (integer_literal)))))
+    return_type: (primitive_type)
+    body: (block
+      (let_statement
+        name: (identifier)
+        value: (reduce_expression operand: (identifier)))
+      (let_statement
+        name: (identifier)
+        value: (reduce_expression operand: (identifier)))
+      (let_statement
+        name: (identifier)
+        value: (reduce_expression operand: (identifier)))
+      (let_statement
+        name: (identifier)
+        value: (reduce_expression operand: (identifier)))
+      result: (binary_expression
+        left: (binary_expression
+          left: (binary_expression
+            left: (identifier)
+            right: (identifier))
+          right: (identifier))
+        right: (identifier)))))
