@@ -1,0 +1,73 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  # Manual dispatch lets us retrofit artefacts onto an existing tag —
+  # the release step below uses `gh release upload --clobber` when the
+  # release already exists. Run via the Actions UI with the tag as the
+  # selected ref.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate parser
+        run: npx tree-sitter generate
+
+      - name: Verify corpus tests still pass
+        run: npx tree-sitter test
+
+      - name: Bundle source + regenerated parser
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME}"
+          STAGE="tree-sitter-esque-${VERSION}"
+          mkdir -p "dist/${STAGE}"
+          # Bundle everything a downstream consumer would need to build
+          # the grammar without having tree-sitter-cli installed.
+          cp -r grammar.js queries bindings src test examples "dist/${STAGE}/"
+          for f in Cargo.toml package.json package-lock.json pyproject.toml setup.py Package.swift binding.gyp Makefile README.md LICENSE .gitattributes .editorconfig; do
+            [ -f "$f" ] && cp "$f" "dist/${STAGE}/"
+          done
+          tar -czf "dist/${STAGE}-source.tar.gz" -C dist "${STAGE}"
+          (cd dist && sha256sum "${STAGE}-source.tar.gz" > "${STAGE}-source.tar.gz.sha256")
+
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" --clobber dist/*.tar.gz dist/*.sha256
+          else
+            gh release create "$TAG" \
+              --title "$TAG" \
+              --generate-notes \
+              dist/*.tar.gz dist/*.sha256
+          fi
+
+# Multi-ecosystem publishing (crates.io / PyPI / npm) is intentionally
+# deferred until concretely needed. See
+# https://github.com/esque-lang/tree-sitter-esque/issues/3 for the
+# decision and the trigger criteria for revisiting it.

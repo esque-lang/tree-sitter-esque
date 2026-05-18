@@ -8,3 +8,9 @@ src/grammar.json
 src/node-types.json
 src/tree_sitter/
 .tree-sitter/
+
+# Release / wheel-build outputs
+dist/
+wheelhouse/
+result
+result-*
