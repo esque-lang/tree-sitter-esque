@@ -53,8 +53,7 @@
           queries = queries;
         });
 
-      # Overlay form so downstream flakes (e.g. glixos-donnis) can fold this
-      # into their pkgs set:
+      # Overlay form so downstream flakes can fold this into their pkgs set:
       #   nixpkgs.overlays = [ inputs.tree-sitter-esque.overlays.default ];
       # → pkgs.tree-sitter-esque                  (the grammar derivation)
       # → pkgs.tree-sitter-grammars.tree-sitter-esque (matches nixpkgs layout
