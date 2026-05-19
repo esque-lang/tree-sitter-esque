@@ -18,6 +18,7 @@ jobs:
   test:
     name: tree-sitter test (linux/amd64)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
